@@ -92,7 +92,7 @@ void draw_player(uint32_t* pixel_buffer, struct player* p) {
 
 		if (p->bullets[i].alive == TRUE) {
 			
-			draw_pixel(pixel_buffer, p->bullets[i].location.x, p->bullets[i].location.y, 0xffffffff);	
+			draw_pixel(pixel_buffer, p->bullets[i].location.x, p->bullets[i].location.y, 0xffffffff);
 		}
 	}
 

@@ -278,8 +278,8 @@ int collision_asteroids(struct asteroid asteroids[], int size, struct vector2d* 
 		if (asteroids[i].alive == 1) {
 			
 			float sum = asteroids[i].hit_radius + radius;
-			float a = pow(asteroids[i].location.x - v->x, 2);
-			float b = pow(asteroids[i].location.y - v->y, 2);
+			float a = (asteroids[i].location.x - v->x) * (asteroids[i].location.x - v->x);
+			float b = (asteroids[i].location.y - v->y) * (asteroids[i].location.y - v->y);
 			float distance = sqrt(a + b);
 			
 			if (distance < sum) {
