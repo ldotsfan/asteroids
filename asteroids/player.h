@@ -6,13 +6,15 @@
 #define P_VERTS 3
 #define BULLETS 3
 	
-enum boolean {TRUE, FALSE};
+//enum boolean {TRUE, FALSE};
+#define TRUE 1
+#define FALSE 0
 
 struct bullet {
 	
 	struct vector2d location;
 	struct vector2d velocity;
-	enum boolean alive;
+	uint8_t alive;
 };
 
 struct player {

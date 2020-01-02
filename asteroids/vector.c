@@ -37,7 +37,7 @@ void print_vector(struct vector2d* a) {
 
 float magnitude_vector(struct vector2d* v) {
 	
-	float c2 = pow(v->x, 2) + pow(v->y, 2); 
+	float c2 = v->x*v->x + v->y*v->y; 
 
 	return sqrt(c2);
 }
@@ -64,7 +64,7 @@ void limit_vector(struct vector2d* v, float limit) {
 void rotate_vector(struct vector2d* v, float degrees) {
 	
 	//calculate radians
-	float angle = degrees * M_PI / 180;
+	float angle = degrees * 3.141592 / 180;
 	float sine = sin(angle);
 	float cosine = cos(angle);
 	

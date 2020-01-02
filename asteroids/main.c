@@ -2,6 +2,7 @@
 //main.c
 
 //Using SDL and standard IO
+#include <hal/video.h>
 #include <SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,20 +14,22 @@
 #define LIVES 3
 
 int init(int width, int height);
+unsigned char getButtonActivated(SDL_GameController * pad, SDL_GameControllerButton button);
 
 SDL_Window* window = NULL;			//The window we'll be rendering to
 SDL_Renderer *renderer;				//The renderer SDL will use to draw to the screen
 SDL_Texture *screen;				//The texture representing the screen	
+SDL_GameController *gamepad;
 uint32_t* pixels = NULL;			//The pixel buffer to draw to
 struct asteroid asteroids[ASTEROIDS];		//The asteroids
 struct player p;				//The player
 struct player lives[LIVES];			//Player lives left
     
 int main (int argc, char* args[]) {
-
+	
 	//SDL Window setup
 	if (init(SCREEN_WIDTH, SCREEN_HEIGHT) == 1) {
-		
+
 		return 0;
 	}
 
@@ -61,56 +64,42 @@ int main (int argc, char* args[]) {
 
 	int sleep = 0;
 	int quit = 0;
-	SDL_Event event;
 	Uint32 next_game_tick = SDL_GetTicks();
+	
+	
 	
 	//render loop
 	while(quit == 0) {
-		
-		//check for new events every frame
-		SDL_PumpEvents();
 
-		const Uint8 *state = SDL_GetKeyboardState(NULL);
-		
-		if (state[SDL_SCANCODE_ESCAPE]) {
+		SDL_GameControllerUpdate();
+
+		if (SDL_GameControllerGetButton(gamepad, SDL_CONTROLLER_BUTTON_BACK)) {
 		
 			quit = 1;
 		}
 			
-		if (state[SDL_SCANCODE_UP]) {
+		if (SDL_GameControllerGetButton(gamepad, SDL_CONTROLLER_BUTTON_DPAD_UP)) {
 
 			struct vector2d thrust = get_direction(&p);
 			multiply_vector(&thrust, .06);
 			apply_force(&p.velocity, thrust);
 		}
 		
-		if (state[SDL_SCANCODE_LEFT]) {
+		if (SDL_GameControllerGetButton(gamepad, SDL_CONTROLLER_BUTTON_DPAD_LEFT)) {
 			
 			rotate_player(&p, -4);
 		}
 
-		if (state[SDL_SCANCODE_RIGHT]) {
+		if (SDL_GameControllerGetButton(gamepad, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)) {
 			
 			rotate_player(&p, 4);
 		}
-
-		while (SDL_PollEvent(&event)) {
 		
-			switch(event.type) {
-					
-				case SDL_KEYDOWN:
-					
-					switch( event.key.keysym.sym ) {
-					
-						case SDLK_SPACE:
-							
-							if (p.lives > 0) {
+		if (getButtonActivated(gamepad, SDL_CONTROLLER_BUTTON_A)) {
+			
+			if (p.lives > 0) {
 								
-								shoot_bullet(&p);
-							}
-
-							break; 
-					}
+				shoot_bullet(&p);
 			}
 		}
 
@@ -129,28 +118,20 @@ int main (int argc, char* args[]) {
 
 		if (res != -1) {
 			
-			p.lives--;
+			if (p.lives>0){
+				p.lives--;
+			}
 			p.location.x = 0;
 			p.location.y = 0;
 			p.velocity.x = 0;
 			p.velocity.y = 0;
 
-			int i = LIVES - 1;
-
-			for ( i = LIVES; i >= 0; i--) {
-				
-				if(lives[i].lives > 0) {
-					
-					lives[i].lives = 0;
-					break;
-				}
-			}
+			lives[p.lives].lives = 0;
 		}
 		
-		int i = 0;
 		struct vector2d translation = {-SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2};
 
-		for (i = 0; i < BULLETS; i++) {
+		for (int i = 0; i < BULLETS; i++) {
 				
 			//only check for collision for bullets that are shown on screen
 			if (p.bullets[i].alive == TRUE) {
@@ -188,8 +169,7 @@ int main (int argc, char* args[]) {
 		next_game_tick += 1000 / 60;
 		sleep = next_game_tick - SDL_GetTicks();
 	
-		if( sleep >= 0 ) {
-            				
+		if( sleep >= 0 ) {				
 			SDL_Delay(sleep);
 		}
 	}
@@ -207,9 +187,9 @@ int main (int argc, char* args[]) {
 }
 
 int init(int width, int height) {
-
+    XVideoSetMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, REFRESH_DEFAULT);
 	//Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
 
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		
@@ -246,7 +226,33 @@ int init(int width, int height) {
 		
 		return 1;
 	}
+	
+	
+	gamepad = SDL_GameControllerOpen(0);
+	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+
 
 	return 0;
 }
 
+unsigned char getButtonActivated(SDL_GameController * pad, SDL_GameControllerButton button) {
+    static unsigned short buttonState = 0x0000;
+    unsigned char ret = 0;
+
+    //Exit on invalid inputs
+    if (button == -1 || button >= 16) {
+        return 0;
+    }
+
+    //Return 1 if button is pressed, and the buttonState was previously 0.
+    if (SDL_GameControllerGetButton(pad, button)) {
+        if (!(buttonState & (1 << (unsigned short) button))) {
+            ret = 1;
+        }
+        buttonState |= 1 << (unsigned short) button; //Set buttonState
+    } else {
+        buttonState &= ~(1 << (unsigned short) button); //Clear buttonState
+    }
+
+    return ret;
+}
