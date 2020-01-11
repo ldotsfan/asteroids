@@ -160,27 +160,8 @@ int draw_pixel(uint32_t* pixel_buffer, int x, int y, uint32_t colour) {
 		return 1;
 	}
 
-	int32_t position = y * SCREEN_WIDTH + x;
+	uint32_t position = y * SCREEN_WIDTH + x;
 	pixel_buffer[position] = colour;
-	
-	for (int j=0;j<4;j++){
-		if((position + j) < SCREEN_WIDTH){
-			pixel_buffer[position+j] = colour;
-		}
-		
-		if((position - j) > 0){
-			pixel_buffer[position - j] = colour;
-		}
-		
-		if(position > (SCREEN_WIDTH + j)){
-			pixel_buffer[position - (SCREEN_WIDTH * j)] = colour;
-		}
-		
-		if((position + SCREEN_WIDTH + j) < SCREEN_HEIGHT){
-			pixel_buffer[position + (SCREEN_WIDTH * j)] = colour;
-		}
-	}
-	
 
 	return 0;
 }
