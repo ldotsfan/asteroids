@@ -162,7 +162,15 @@ int draw_pixel(uint32_t* pixel_buffer, int x, int y, uint32_t colour) {
 
 	uint32_t position = y * SCREEN_WIDTH + x;
 	pixel_buffer[position] = colour;
+    
+    //Print a pixel arround each drawn pixel for thicker lines (cross style)
+    if (y >= 1)             pixel_buffer[position - SCREEN_WIDTH] = colour;
+    if (y < SCREEN_HEIGHT)  pixel_buffer[position + SCREEN_WIDTH] = colour;
+    
+    if (x >= 1)             pixel_buffer[position - 1] = colour;
+    if (x < SCREEN_WIDTH)   pixel_buffer[position + 1] = colour;
 
+    
 	return 0;
 }
 
