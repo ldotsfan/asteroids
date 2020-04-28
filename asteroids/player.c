@@ -62,7 +62,7 @@ void shoot_bullet(struct player* p) {
 			p->bullets[i].alive = TRUE;
 			p->bullets[i].location = p->world_vert[0];
 			p->bullets[i].velocity = get_direction(p);
-			multiply_vector(&p->bullets[i].velocity, 4.1);
+			multiply_vector(&p->bullets[i].velocity, 7);
 			break;
 		}
 	}

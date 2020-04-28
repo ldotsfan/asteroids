@@ -120,17 +120,19 @@ void draw_asteroids(uint16_t* pixel_buffer, struct asteroid asteroids[], int siz
 	for (i = 0; i < size; i++) {
 	
 		if (asteroids[i].alive) {
-			
-			draw_line(pixel_buffer, asteroids[i].world_vert[0].x, asteroids[i].world_vert[0].y, asteroids[i].world_vert[1].x, asteroids[i].world_vert[1].y, 0xffff);
-			draw_line(pixel_buffer, asteroids[i].world_vert[1].x, asteroids[i].world_vert[1].y, asteroids[i].world_vert[2].x, asteroids[i].world_vert[2].y, 0xffff);
-			draw_line(pixel_buffer, asteroids[i].world_vert[2].x, asteroids[i].world_vert[2].y, asteroids[i].world_vert[3].x, asteroids[i].world_vert[3].y, 0xffff);
-			draw_line(pixel_buffer, asteroids[i].world_vert[3].x, asteroids[i].world_vert[3].y, asteroids[i].world_vert[4].x, asteroids[i].world_vert[4].y, 0xffff);
-			draw_line(pixel_buffer, asteroids[i].world_vert[4].x, asteroids[i].world_vert[4].y, asteroids[i].world_vert[5].x, asteroids[i].world_vert[5].y, 0xffff);
-			draw_line(pixel_buffer, asteroids[i].world_vert[5].x, asteroids[i].world_vert[5].y, asteroids[i].world_vert[6].x, asteroids[i].world_vert[6].y, 0xffff);
-			draw_line(pixel_buffer, asteroids[i].world_vert[6].x, asteroids[i].world_vert[6].y, asteroids[i].world_vert[7].x, asteroids[i].world_vert[7].y, 0xffff);
-			draw_line(pixel_buffer, asteroids[i].world_vert[7].x, asteroids[i].world_vert[7].y, asteroids[i].world_vert[8].x, asteroids[i].world_vert[8].y, 0xffff);
-			draw_line(pixel_buffer, asteroids[i].world_vert[8].x, asteroids[i].world_vert[8].y, asteroids[i].world_vert[9].x, asteroids[i].world_vert[9].y, 0xffff);
-			draw_line(pixel_buffer, asteroids[i].world_vert[9].x, asteroids[i].world_vert[9].y, asteroids[i].world_vert[0].x, asteroids[i].world_vert[0].y, 0xffff);
+			static const uint16_t colour = 0x6180;
+			struct asteroid a = asteroids[i];
+			draw_line(pixel_buffer, a.world_vert[0].x, a.world_vert[0].y, a.world_vert[1].x, a.world_vert[1].y, colour);
+			draw_line(pixel_buffer, a.world_vert[1].x, a.world_vert[1].y, a.world_vert[2].x, a.world_vert[2].y, colour);
+			draw_line(pixel_buffer, a.world_vert[2].x, a.world_vert[2].y, a.world_vert[3].x, a.world_vert[3].y, colour);
+			draw_line(pixel_buffer, a.world_vert[3].x, a.world_vert[3].y, a.world_vert[4].x, a.world_vert[4].y, colour);
+			draw_line(pixel_buffer, a.world_vert[4].x, a.world_vert[4].y, a.world_vert[5].x, a.world_vert[5].y, colour);
+			draw_line(pixel_buffer, a.world_vert[4].x, a.world_vert[4].y, a.world_vert[5].x, a.world_vert[5].y, colour);
+			draw_line(pixel_buffer, a.world_vert[5].x, a.world_vert[5].y, a.world_vert[6].x, a.world_vert[6].y, colour);
+			draw_line(pixel_buffer, a.world_vert[6].x, a.world_vert[6].y, a.world_vert[7].x, a.world_vert[7].y, colour);
+			draw_line(pixel_buffer, a.world_vert[7].x, a.world_vert[7].y, a.world_vert[8].x, a.world_vert[8].y, colour);
+			draw_line(pixel_buffer, a.world_vert[8].x, a.world_vert[8].y, a.world_vert[9].x, a.world_vert[9].y, colour);
+			draw_line(pixel_buffer, a.world_vert[9].x, a.world_vert[9].y, a.world_vert[0].x, a.world_vert[0].y, colour);
 		}
 
 		/*
