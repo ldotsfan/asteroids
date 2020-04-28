@@ -19,7 +19,7 @@ struct asteroid {
 
 void init_asteroids(struct asteroid asteroids[], int size);
 void update_asteroids(struct asteroid asteroids[], int size);
-void draw_asteroids(uint32_t* pixel_buffer, struct asteroid asteroids[], int size);
+void draw_asteroids(uint16_t* pixel_buffer, struct asteroid asteroids[], int size);
 int shrink_asteroid(struct asteroid* a, int size);
 void spawn_asteroids(struct asteroid a[], int length, int size, struct vector2d v);
 void bounds_asteroids(struct asteroid asteroids[], int size);

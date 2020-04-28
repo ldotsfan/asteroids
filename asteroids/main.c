@@ -20,13 +20,13 @@ SDL_Window* window = NULL;			//The window we'll be rendering to
 SDL_Renderer *renderer;				//The renderer SDL will use to draw to the screen
 SDL_Texture *screen;				//The texture representing the screen	
 SDL_GameController *gamepad;
-uint32_t* pixels = NULL;			//The pixel buffer to draw to
+uint16_t* pixels = NULL;			//The pixel buffer to draw to
 struct asteroid asteroids[ASTEROIDS];		//The asteroids
 struct player p;				//The player
 struct player lives[LIVES];			//Player lives left
     
 int main (int argc, char* args[]) {
-	
+
 	//SDL Window setup
 	if (init(SCREEN_WIDTH, SCREEN_HEIGHT) == 1) {
 
@@ -104,7 +104,7 @@ int main (int argc, char* args[]) {
 		}
 
 		//draw to the pixel buffer
-		clear_pixels(pixels, 0x00000000);
+		clear_pixels(pixels, 0x0000);
 		draw_player(pixels, &p);
 		draw_player(pixels, &lives[0]);
 		draw_player(pixels, &lives[1]);
@@ -158,20 +158,14 @@ int main (int argc, char* args[]) {
 		update_asteroids(asteroids, ASTEROIDS);
 
 		//draw buffer to the texture representing the screen
-		SDL_UpdateTexture(screen, NULL, pixels, SCREEN_WIDTH * sizeof (Uint32));
+		SDL_UpdateTexture(screen, NULL, pixels, SCREEN_WIDTH * sizeof (Uint16));
 
 		//draw to the screen
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, screen, NULL, NULL);
 		SDL_RenderPresent(renderer);
-				
-		//time it takes to render 1 frame in milliseconds
-		next_game_tick += 1000 / 60;
-		sleep = next_game_tick - SDL_GetTicks();
-	
-		if( sleep >= 0 ) {				
-			SDL_Delay(sleep);
-		}
+
+		XVideoWaitForVBlank();
 	}
 
 	//free the screen buffer
@@ -187,7 +181,7 @@ int main (int argc, char* args[]) {
 }
 
 int init(int width, int height) {
-    XVideoSetMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, REFRESH_DEFAULT);
+    XVideoSetMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, REFRESH_DEFAULT);
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
 
@@ -200,10 +194,10 @@ int init(int width, int height) {
 	SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN, &window, &renderer);
 	
 	//set up screen texture
-	screen = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+	screen = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 	
 	//allocate pixel buffer
-	pixels = (Uint32*) malloc((SCREEN_WIDTH * SCREEN_HEIGHT) * sizeof(Uint32));
+	pixels = (Uint16*) malloc((SCREEN_WIDTH * SCREEN_HEIGHT) * sizeof(Uint16));
 
 
 	if (window == NULL) { 

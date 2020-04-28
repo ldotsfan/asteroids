@@ -3,8 +3,7 @@
 
 #include "renderer.h"
 
-int draw_line(uint32_t* pixel_buffer, int x1, int y1, int x2, int y2, uint32_t colour) {
-
+int draw_line(uint16_t* pixel_buffer, int x1, int y1, int x2, int y2, uint16_t colour) {
 
 	//plot the first point
 	draw_pixel(pixel_buffer, x1, y1, colour);
@@ -146,7 +145,7 @@ int draw_line(uint32_t* pixel_buffer, int x1, int y1, int x2, int y2, uint32_t c
 	return 0;	
 }
 
-int draw_pixel(uint32_t* pixel_buffer, int x, int y, uint32_t colour) {
+int draw_pixel(uint16_t* pixel_buffer, int x, int y, uint16_t colour) {
 	
 	//dont draw any pixels that are outside of the pixel buffer
 	if (x < 0 || y < 0) {
@@ -164,17 +163,21 @@ int draw_pixel(uint32_t* pixel_buffer, int x, int y, uint32_t colour) {
 	pixel_buffer[position] = colour;
     
     //Print a pixel arround each drawn pixel for thicker lines (cross style)
-    if (y >= 1)             pixel_buffer[position - SCREEN_WIDTH] = colour;
-    if (y < SCREEN_HEIGHT)  pixel_buffer[position + SCREEN_WIDTH] = colour;
+    if (y > 0)
+		pixel_buffer[position - SCREEN_WIDTH] = colour;
+    if (y < SCREEN_HEIGHT - 1)
+		pixel_buffer[position + SCREEN_WIDTH] = colour;
     
-    if (x >= 1)             pixel_buffer[position - 1] = colour;
-    if (x < SCREEN_WIDTH)   pixel_buffer[position + 1] = colour;
+    if (x > 0)
+		pixel_buffer[position - 1] = colour;
+    if (x < SCREEN_WIDTH - 1)
+		pixel_buffer[position + 1] = colour;
 
     
 	return 0;
 }
 
-void clear_pixels(uint32_t* pixel_buffer, uint32_t colour) {
+void clear_pixels(uint16_t* pixel_buffer, uint16_t colour) {
 
 	int i = 0;
 	int buffer_size = SCREEN_WIDTH * SCREEN_HEIGHT;

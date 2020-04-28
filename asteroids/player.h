@@ -30,7 +30,7 @@ struct player {
 
 void init_player(struct player* p);
 
-void draw_player(uint32_t* pixel_buffer, struct player* p);
+void draw_player(uint16_t* pixel_buffer, struct player* p);
 
 void shoot_bullet(struct player* p);
 
